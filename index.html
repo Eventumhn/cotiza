@@ -152,7 +152,7 @@ nav.ctrl{display:flex;gap:10px;align-items:center}
 .errmsg:empty{display:none}
 footer{text-align:center;font-size:12px;color:var(--dim)}
 /* Movimiento (se apaga si el teléfono pide menos animación) */
-@media (prefers-reduced-motion:no-preference){
+@media all{
 .aura{animation:aura 18s ease-in-out infinite alternate}
 @keyframes aura{to{transform:translate3d(4%,-3%,0) scale(1.08)}}
 .bar span::after{animation:brillo 2.2s infinite}
@@ -162,10 +162,10 @@ footer{text-align:center;font-size:12px;color:var(--dim)}
 .card.enter.atras{animation-name:inL}
 .card.enter>*{animation:sube .5s cubic-bezier(.2,.8,.2,1) both}
 .card.enter>*:nth-child(2){animation-delay:.07s}.card.enter>*:nth-child(3){animation-delay:.14s}.card.enter>*:nth-child(4){animation-delay:.21s}.card.enter>*:nth-child(5){animation-delay:.28s}.card.enter>*:nth-child(6){animation-delay:.35s}.card.enter>*:nth-child(7){animation-delay:.42s}
-@keyframes in{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
-@keyframes inR{from{opacity:0;transform:translateX(70px) rotate(1.5deg)}to{opacity:1;transform:none}}
-@keyframes inL{from{opacity:0;transform:translateX(-70px) rotate(-1.5deg)}to{opacity:1;transform:none}}
-@keyframes sube{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes in{from{opacity:0;transform:translateY(24px) scale(.97);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+@keyframes inR{from{opacity:0;transform:translateX(70px) rotate(1.5deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+@keyframes inL{from{opacity:0;transform:translateX(-70px) rotate(-1.5deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+@keyframes sube{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 .hero{animation:flota 4s ease-in-out infinite}
 @keyframes flota{50%{transform:translateY(-8px) rotate(-3deg)}}
 .star.on svg{animation:estrella .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k,1)*60ms)}
@@ -181,7 +181,7 @@ footer{text-align:center;font-size:12px;color:var(--dim)}
 @keyframes traza{to{stroke-dashoffset:0}}
 .sum{animation:sube .5s both}.sum:nth-child(2){animation-delay:.1s}.sum:nth-child(3){animation-delay:.2s}.sum:nth-child(4){animation-delay:.3s}
 }
-@media (prefers-reduced-motion:no-preference){.card.enter>.hero{animation:sube .5s both,flota 4s .6s ease-in-out infinite}}
+@media all{.card.enter>.hero{animation:sube .5s both,flota 4s .6s ease-in-out infinite}}
 /* ---- Solicitud de cotización ---- */
 .lang{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px}
 .lang button{border:none;background:none;color:var(--dim);font-weight:800;font-size:12px;letter-spacing:.06em;padding:5px 10px;border-radius:99px}
@@ -637,7 +637,7 @@ document.addEventListener("change",e=>{if(e.target.id!=="files")return;const er=
   const r=new FileReader();r.onload=()=>{A.archivos.push({name:f.name.slice(0,120),type:f.type,data:String(r.result).split(",")[1]});render()};r.readAsDataURL(f)})});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){const n=$("#next");if(n&&!n.disabled)n.click()}});
 // ---- Cubos del logo flotando y confeti ----
-const cv=$("#lights"),cx=cv.getContext("2d");let W,H,parts=[],cubes=[];const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cv=$("#lights"),cx=cv.getContext("2d");let W,H,parts=[],cubes=[];const still=false; // animaciones siempre activas
 const PAL=[["#f06a22","#ee4b23","#a03022"],["#9c88be","#7b62a9","#5a3e99"],["#fce046","#f49b20","#ee4b23"]];
 function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;const n=Math.round(Math.min(14,Math.max(5,innerWidth/110)));cubes=[...Array(n)].map((_,k)=>({x:Math.random()*W,y:Math.random()*H,s:(12+Math.random()*26)*devicePixelRatio,v:(.15+Math.random()*.3)*devicePixelRatio,ph:Math.random()*6,p:PAL[k%3],o:.1+Math.random()*.18}))}
 addEventListener("resize",size);size();
