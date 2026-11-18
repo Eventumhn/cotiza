@@ -284,6 +284,25 @@ footer{display:flex;flex-direction:column;gap:10px;align-items:center}
 .nova-wa{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border-radius:16px;border:1px solid rgba(47,191,143,.45);background:rgba(47,191,143,.1);color:#bff3df;font-weight:700;text-decoration:none;text-align:center;transition:background .2s,transform .2s}
 .nova-wa:hover{background:rgba(47,191,143,.2);transform:translateY(-2px)}
 .nova-wa svg{width:22px;height:22px;flex:none;fill:none;stroke:#4fd6a3;stroke-width:1.8;stroke-linejoin:round}
+.nova-btn{position:fixed;right:20px;bottom:20px;z-index:90;display:flex;align-items:center;gap:10px;border:0;background:none;padding:0;cursor:pointer;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s}
+.nova-btn.oculto{transform:translateY(140%);opacity:0;pointer-events:none}
+.nova-ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#2a1460,#160c2c);border:1.5px solid rgba(238,75,34,.6);box-shadow:0 14px 34px -8px rgba(238,75,34,.7);transition:transform .3s}
+.nova-ic img{width:34px;height:auto;animation:respiraN 2.8s ease-in-out infinite}
+@keyframes respiraN{50%{transform:scale(1.07)}}
+.nova-btn:hover .nova-ic{transform:scale(1.08) rotate(-6deg)}
+.nova-burb{background:#fff;color:#1a0c36;font-weight:700;font-size:.9rem;padding:9px 14px;border-radius:16px 16px 4px 16px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);transition:opacity .6s,background .6s}
+.nova-btn.corto .nova-burb{opacity:.75;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nova-btn.corto:hover .nova-burb{opacity:1}
+.nova-menu{position:fixed;right:20px;bottom:94px;z-index:96;display:flex;flex-direction:column;gap:8px;opacity:0;transform:translateY(14px) scale(.96);pointer-events:none;transition:.3s cubic-bezier(.2,.8,.2,1)}
+.nova-menu.open{opacity:1;transform:none;pointer-events:auto}
+.nova-menu a,.nova-menu button{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:16px;font:700 15px var(--f-body,inherit);text-decoration:none;border:1px solid rgba(255,255,255,.14);background:rgba(27,22,48,.92);color:#fbf8ff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 14px 34px -14px rgba(0,0,0,.8);cursor:pointer}
+.nova-menu .wa{border-color:rgba(47,191,143,.55);background:rgba(20,60,45,.92)}
+.nova-menu span{font-size:20px}
+.nova-panel{position:fixed;right:20px;bottom:94px;z-index:97;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px -20px rgba(0,0,0,.8);opacity:0;transform:translateY(20px) scale(.97);pointer-events:none;transition:.35s cubic-bezier(.2,.8,.2,1);background:#0e0720}
+.nova-panel.open{opacity:1;transform:none;pointer-events:auto}
+.nova-panel iframe{width:100%;height:100%;border:0}
+.nova-x{position:absolute;top:10px;right:12px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:1.2rem;cursor:pointer}
+@media (max-width:600px){body{padding-bottom:72px}.nova-btn{right:14px;bottom:14px}.nova-ic{width:52px;height:52px;border-radius:15px}.nova-ic img{width:28px}.nova-burb{font-size:.78rem;padding:7px 11px}.nova-menu,.nova-panel{right:14px;bottom:80px}}
 </style>
 </head>
 <body>
@@ -632,6 +651,22 @@ function confetti(){if(still)return;const cols=["#ee4b22","#7c5cd6","#f5a524","#
 let PREV=-1;const _render=render;render=function(){_render();const c=document.querySelector("#main .card");if(c&&i===PREV)c.classList.remove("enter");PREV=i};
 if(PRM.get("seg")){i=Q.findIndex(x=>x.type==="seg")}
 render();
+</script>
+<button class="nova-btn" id="novaBtn" type="button" aria-label="Chatear con Nova" aria-expanded="false"><span class="nova-burb" id="novaBurb">¿Chateamos? 👋</span><span class="nova-ic"><img src="logo-cubos.png" alt=""></span></button>
+<div class="nova-menu" id="novaMenu"><button type="button" id="novaChat"><span>💬</span><b id="novaChatTx">Chatear aquí con Nova</b></button><a class="wa" id="novaWa" target="_blank" rel="noopener" href="https://wa.me/50499354582"><span>🟢</span><b id="novaWaTx">Escribir por WhatsApp</b></a></div>
+<div class="nova-panel" id="novaPanel" aria-hidden="true"><button class="nova-x" id="novaX" type="button" aria-label="Cerrar">×</button><iframe id="novaFrame" title="Nova, asistente de Eventum"></iframe></div>
+<script>
+(function(){var b=document.getElementById("novaBtn"),m=document.getElementById("novaMenu"),pn=document.getElementById("novaPanel"),fr=document.getElementById("novaFrame"),tq=null;
+function en(){return (document.documentElement.lang||"es")==="en"}
+function textos(){document.getElementById("novaBurb").textContent=en()?"Let's chat 👋":"¿Chateamos? 👋";document.getElementById("novaChatTx").textContent=en()?"Chat here with Nova":"Chatear aquí con Nova";document.getElementById("novaWaTx").textContent=en()?"Message us on WhatsApp":"Escribir por WhatsApp";
+document.getElementById("novaWa").href="https://wa.me/50499354582?text="+encodeURIComponent(en()?"Hi Nova! 👋 I'm filling out Eventum's quote form and I'd like some help.":"¡Hola, Nova! 👋 Estoy llenando el formulario de cotización de Eventum y me gustaría ayuda.")}
+function cerrarTodo(){m.classList.remove("open");pn.classList.remove("open");pn.setAttribute("aria-hidden","true");b.setAttribute("aria-expanded","false")}
+b.onclick=function(){textos();if(pn.classList.contains("open")||m.classList.contains("open")){cerrarTodo();return}m.classList.add("open");b.setAttribute("aria-expanded","true")};
+document.getElementById("novaChat").onclick=function(){m.classList.remove("open");if(!fr.src)fr.src="https://eventum-whatsapp.novabtl.workers.dev/chat";pn.classList.add("open");pn.setAttribute("aria-hidden","false")};
+document.getElementById("novaWa").addEventListener("click",function(){setTimeout(cerrarTodo,300)});
+document.getElementById("novaX").onclick=cerrarTodo;addEventListener("keydown",function(e){if(e.key==="Escape")cerrarTodo()});
+setTimeout(function(){b.classList.add("corto")},6000);textos();setTimeout(textos,1500);
+addEventListener("scroll",function(){if(pn.classList.contains("open")||m.classList.contains("open"))return;b.classList.add("oculto");clearTimeout(tq);tq=setTimeout(function(){b.classList.remove("oculto")},700)},{passive:true});})();
 </script>
 </body>
 </html>
