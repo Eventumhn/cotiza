@@ -324,7 +324,9 @@ const PRM=new URLSearchParams(location.search);
 const DEMO=PRM.has("demo");
 const GALERIA=[]; // {src:"img/x.jpg", es:"Elegante", en:"Elegant"} — al agregar fotos aparece el paso "Inspiración"
 // Redes sociales: pon el enlace de cada una; las vacías no se muestran.
-const REDES=[["Instagram","https://www.instagram.com/eventumhn"],["Facebook","https://www.facebook.com/share/19JAutrwwo/"],["TikTok","https://www.tiktok.com/@eventumhn"],["WhatsApp","https://wa.me/50499354582?text="+encodeURIComponent("¡Hola, Nova! 👋 Me gustaría cotizar un evento con Eventum. ¿Me ayudas?")],["LinkedIn",""],["Sitio web",""]];
+// WhatsApp de Nova apagado temporalmente (solo queda el chat de Nova en la página). Para volver a activarlo: true
+const WA_NOVA_ACTIVO=false;
+const REDES=[["Instagram","https://www.instagram.com/eventumhn"],["Facebook","https://www.facebook.com/share/19JAutrwwo/"],["TikTok","https://www.tiktok.com/@eventumhn"],["WhatsApp",WA_NOVA_ACTIVO?"https://wa.me/50499354582?text="+encodeURIComponent("¡Hola, Nova! 👋 Me gustaría cotizar un evento con Eventum. ¿Me ayudas?"):""],["LinkedIn",""],["Sitio web",""]];
 const ICR={Instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>',Facebook:'<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>',TikTok:'<path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3c0 3 2 5 5 5"/>',WhatsApp:'<path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.6z"/>',LinkedIn:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/>',"Sitio web":'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'};
 function redesHTML(){const r=REDES.filter(x=>x[1]);if(!r.length)return"";return `<div class="redes">${r.map(([n,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener" aria-label="${n}"><svg viewBox="0 0 24 24">${ICR[n]}</svg><span>${n}</span></a>`).join("")}</div>`}
 const LS="eventumCot1", LS_MIS="eventumCotMis";
@@ -531,7 +533,7 @@ function render(){
   <h2 style="font-size:20px">${t("packT")}</h2><p class="hint" style="margin-top:-14px">${t("packH")}</p>
   <div class="packs">${PACKS.map(p=>`<button class="pack" data-pack="${p.id}" aria-pressed="${A.paquete===p.id}"><span class="ico">${p.ico}</span><b>${p[LANG][0]}</b><small>${p[LANG][1]}</small></button>`).join("")}</div>
   <nav class="ctrl"><button class="btn primary" data-go="1" id="next">${t("start")}</button></nav>
-  <a class="nova-wa" href="https://wa.me/50499354582?text=${encodeURIComponent(t("novaMsg"))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-2-2l.8-1-1-2z"/></svg><span>${t("novaWa")}</span></a></section>`;if(mis.length)verificarMis();return}
+  ${WA_NOVA_ACTIVO?`<a class="nova-wa" href="https://wa.me/50499354582?text=${encodeURIComponent(t("novaMsg"))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-2-2l.8-1-1-2z"/></svg><span>${t("novaWa")}</span></a>`:""}</section>`;if(mis.length)verificarMis();return}
  if(q.type==="fin"){m.innerHTML=finHTML();return}
  if(q.type==="seg"){m.innerHTML=`<section class="card enter"><span class="eyebrow">${t("segEye")}</span><h2>${t("cargando")}</h2></section>`;cargarSeg();return}
  const vs=vis(),last=vs[vs.length-1]===q;
@@ -661,7 +663,8 @@ function en(){return (document.documentElement.lang||"es")==="en"}
 function textos(){document.getElementById("novaBurb").textContent=en()?"Let's chat 👋":"¿Chateamos? 👋";document.getElementById("novaChatTx").textContent=en()?"Chat here with Nova":"Chatear aquí con Nova";document.getElementById("novaWaTx").textContent=en()?"Message us on WhatsApp":"Escribir por WhatsApp";
 document.getElementById("novaWa").href="https://wa.me/50499354582?text="+encodeURIComponent(en()?"Hi Nova! 👋 I'm filling out Eventum's quote form and I'd like some help.":"¡Hola, Nova! 👋 Estoy llenando el formulario de cotización de Eventum y me gustaría ayuda.")}
 function cerrarTodo(){m.classList.remove("open");pn.classList.remove("open");pn.setAttribute("aria-hidden","true");b.setAttribute("aria-expanded","false")}
-b.onclick=function(){textos();if(pn.classList.contains("open")||m.classList.contains("open")){cerrarTodo();return}m.classList.add("open");b.setAttribute("aria-expanded","true")};
+var soloChat=(typeof WA_NOVA_ACTIVO!=="undefined"&&!WA_NOVA_ACTIVO);if(soloChat)document.getElementById("novaWa").style.display="none";
+b.onclick=function(){textos();if(pn.classList.contains("open")||m.classList.contains("open")){cerrarTodo();return}if(soloChat){document.getElementById("novaChat").onclick();b.setAttribute("aria-expanded","true");return}m.classList.add("open");b.setAttribute("aria-expanded","true")};
 document.getElementById("novaChat").onclick=function(){m.classList.remove("open");if(!fr.src)fr.src="https://eventum-whatsapp.novabtl.workers.dev/chat";pn.classList.add("open");pn.setAttribute("aria-hidden","false")};
 document.getElementById("novaWa").addEventListener("click",function(){setTimeout(cerrarTodo,300)});
 document.getElementById("novaX").onclick=cerrarTodo;addEventListener("keydown",function(e){if(e.key==="Escape")cerrarTodo()});
